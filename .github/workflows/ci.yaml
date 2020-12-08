@@ -56,7 +56,7 @@ jobs:
 
     env: # see https://github.com/python-poetry/poetry/issues/2801
       POETRY_HTTP_BASIC_PYPI_USERNAME: __token__
-      POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.pypi_token }}
+      POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.PYPI_TOKEN }}
 
     steps:
       - uses: actions/checkout@v2
