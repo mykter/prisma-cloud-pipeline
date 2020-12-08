@@ -22,6 +22,9 @@ Warning: the following rules didn't match any findings, you may want to check th
 	Limit memory
 	Running our containers as root - has issue PROJ-321 been resolved?
 
+The following rules have expired and were ignored:
+	- Twistlock agent
+
 ╒═══════════════════════════════════╤═════════════════════════════╤════════════════════════════════════════════════════════════════════════════════════╕
 │ Container                         │ Untriaged Vulnerabilities   │ Untriaged Compliance Issues                                                        │
 ╞═══════════════════════════════════╪═════════════════════════════╪════════════════════════════════════════════════════════════════════════════════════╡

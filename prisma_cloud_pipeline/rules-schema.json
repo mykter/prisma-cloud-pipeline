@@ -10,7 +10,8 @@
           "matches": { "type": "string" },
           "rationale": { "type": "string" },
           "issue": { "issue": "string" },
-          "containerFilter": { "type": "string" }
+          "containerFilter": { "type": "string" },
+          "expires": { "$ref": "#/definitions/expires" }
         },
         "required": ["matches", "rationale", "containerFilter"],
         "additionalProperties": false
@@ -24,7 +25,8 @@
           "rationale": { "type": "string" },
           "issue": { "issue": "string" },
           "containerFilter": { "type": "string" },
-          "vulnFilter": { "type": "string" }
+          "vulnFilter": { "type": "string" },
+          "expires": { "$ref": "#/definitions/expires" }
         },
         "required": ["matches", "rationale", "vulnFilter"],
         "additionalProperties": false
@@ -38,12 +40,16 @@
           "rationale": { "type": "string" },
           "issue": { "issue": "string" },
           "containerFilter": { "type": "string" },
-          "complianceFilter": { "type": "string" }
+          "complianceFilter": { "type": "string" },
+          "expires": { "$ref": "#/definitions/expires" }
         },
         "required": ["matches", "rationale", "complianceFilter"],
         "additionalProperties": false
       }
     },
     "additionalProperties": false
+  },
+  "definitions": {
+    "expires": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$" }
   }
 }

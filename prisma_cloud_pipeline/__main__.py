@@ -20,7 +20,7 @@ def make_parser() -> argparse.ArgumentParser:
         "--rules",
         type=argparse.FileType("r"),
         metavar="TRIAGE.yaml",
-        help="Triage rules file, see example.yaml for the format",
+        help="Triage rules file, see example-rules.yaml for the format",
     )
     parser.add_argument(
         "--results",
@@ -129,7 +129,10 @@ def get_results(args) -> Results:
                 f"username=<user> password=$(cat pass) | jq -r .token)"
             )
 
-        results = Api(args.api, token, args.collections).fetch_results()
+        try:
+            results = Api(args.api, token, args.collections).fetch_results()
+        except ValueError as err:
+            sys.exit(err)
 
         if args.save:
             json.dump(results.containers, args.save, indent=2)
@@ -164,7 +167,11 @@ def main() -> None:
             print(f'At {"/".join(map(str,error.path))}: {error.message}')
         sys.exit(1)
 
-    results.triage(rules)
+    results.rules = rules
+    try:
+        results.triage()
+    except ValueError as err:
+        sys.exit(err)
 
     containers, vulns, issues = results.count()
     print(
@@ -183,19 +190,6 @@ def main() -> None:
 
     print()
     results.print(args.finding_stats)
-
-    rule_issues = [
-        rule["issue"]
-        for rule in (rules["containers"] + rules["vulnerabilities"] + rules["complianceIssues"])
-        if "issue" in rule
-    ]
-    if len(rule_issues) > 0:
-        print("\nOutstanding issues in triage rules: ")
-        print("\t" + "\n\t".join(rule_issues))
-        print(
-            "Once an issue is closed, the corresponding triage rule "
-            "should be removed so regressions will be detected."
-        )
 
     if args.check:
         sys.exit(min(len(results.containers), 255))

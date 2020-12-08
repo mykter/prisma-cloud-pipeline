@@ -16,7 +16,7 @@ set of locally defined triage rules are applied to suppress specific findings or
 
 This:
 
-1.  Provides clear visibility of any new untriaged findings, and optionally allows the pipeline to fail if there are
+1.  Provides clear visibility of any new un-triaged findings, and optionally allows the pipeline to fail if there are
     any.
 
 2.  Enables triage of issues to follow the usual merge/pull request approach. If there are any new findings or false
@@ -121,7 +121,7 @@ docker run --rm -e TOKEN=$TOKEN -v $(pwd):/mnt prisma-cloud-pipeline --api=$API 
 
 Full usage can be found with `docker run --rm prisma-cloud-pipeline --help`.
 
-The recommended way to run the tool is via the docker container in your pipeline. Here's an example gitlab job
+The recommended way to run the tool is via the docker container in your pipeline. Here's an example Gitlab job
 definition, where USER and PASS are predefined CI variables for an account that can read from the API:
 
 ```yaml
@@ -178,6 +178,7 @@ The basic format of a triage rule is:
   containerFilter: <see below>
   vulnFilter:
   complianceFilter:
+  expires: <date in YYYY-MM-DD format>
 ```
 
 The rules under the `containers` key can only contain a `containerFilter`. Any container that matches this filter will
@@ -185,8 +186,14 @@ be excluded, so be very sure you don't care about any possible finding before us
 
 The rules under `vulnerabilities` and `complianceIssues` must include either a `vulnFilter` or a `complianceFilter`
 respectively, and both can optionally include a `containerFilter`. If a `containerFilter` is not specified, then such a
-rule matches _every_ occurence of a matching vulnerability or compliance issue, wherever it is found. If a
+rule matches _every_ occurrence of a matching vulnerability or compliance issue, wherever it is found. If a
 `containerFilter` is specified, then the rule will only exclude findings from those containers that match.
+
+Any rule can have an `expires` key; this tells the tool to ignore the rule after it has expired. This is useful for when
+you have fixed an issue, but the fix hasn't propagated across the whole system yet (or across any of it) - you want to
+temporarily ignore that finding, on the assumption that it is going to go away shortly. Once the rule expires, if the
+finding is still present then you will be notified - apparently the fix didn't work or took longer than you expected to
+propagate.
 
 ### Writing Filters
 

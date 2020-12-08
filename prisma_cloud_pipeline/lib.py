@@ -1,6 +1,5 @@
 """Library to retrieve container findings from Prisma Cloud and apply local triage rules"""
 
-import sys
 from urllib.parse import urljoin
 from typing import Tuple, List, Sequence, Any, Mapping, TypedDict, DefaultDict
 from enum import Enum
@@ -8,6 +7,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 import textwrap
 import operator
+from datetime import datetime
 
 import requests
 import jq  # type: ignore
@@ -28,6 +28,7 @@ class TriageRule(TypedDict, total=False):  # pylint: disable=E0239,R0903 # false
     complianceFilter: str
     rationale: str
     issue: str
+    expires: str
 
 
 class TriageRules(TypedDict, total=False):  # pylint: disable=E0239,R0903 # false positive
@@ -90,6 +91,21 @@ def label_value(label: str, container: Container) -> str:
     return matches[0].split(":", maxsplit=1)[1]
 
 
+def expired(rule: TriageRule) -> bool:
+    """ returns true if the rule has an 'expires' entry before today """
+
+    if "expires" not in rule:
+        return False
+    try:
+        date = datetime.strptime(rule["expires"], "%Y-%m-%d")
+    except ValueError as err:
+        raise ValueError(
+            f"Error parsing expires date for rule '{rule['matches']}' - dates must be in YYYY-MM-DD"
+            f" format"
+        ) from err
+    return date < datetime.today()
+
+
 class ContainerID:
     """Retrieves useful identifier information from a container,
     and renders it ready for table output.
@@ -133,6 +149,7 @@ class ContainerID:
     def __str__(self):
         # There is a very careful mix of the TextWrapper and manual line breaks here.
         # Using the wrapper by itself results in non-ideal output.
+
         # Only show an entry if the cid has a corresponding entry, to cope with non-k8s use etc
         if self.container_name:
             entries = [f"{ContainerID.name_wrap(self.container_name)}"]
@@ -163,61 +180,98 @@ class ContainerID:
         return full_name.split("/")[-1].split("@")[0]
 
 
+# pylint: disable=R0902 # too-many-instance-attributes - this class got a bit big
 class Results:
     """Stores a modified version of the radar data from the API which can be filtered and printed"""
 
     containers: Sequence[Container]
+    expired_rules: List[TriageRule]
+
+    _compliance_stats: DefaultDict[str, int]
+    _vuln_stats: DefaultDict[str, int]
+    _rules: TriageRules
     _rule_stats: RuleStats
-    compliance_stats: DefaultDict[str, int]
-    vuln_stats: DefaultDict[str, int]
+    _container_rules: List[TriageRule]
+    _finding_rules: List[TriageRule]
 
     def __init__(self):
         self.containers = []
+        self.expired_rules = []
+
+        self._rules = {}
         self._rule_stats = []
+        self._container_rules = []
+        self._finding_rules = []
 
-    def triage(self, rules: TriageRules) -> None:
-        """filter the data based on rules, updating the instance's data in place"""
+    @property
+    def rules(self):
+        """ The triage rules to apply """
+        return self._rules
 
+    @rules.setter
+    def rules(self, rules: TriageRules):
+        """ Process the rules, identifying expired ones """
+
+        self._rules = rules
+        self.expired_rules = []
+
+        self._container_rules = []
         if "containers" in rules:
             for rule in rules["containers"]:
-                container_count, vuln_count, compliance_count = self.count()
+                if expired(rule):
+                    self.expired_rules.append(rule)
+                else:
+                    self._container_rules.append(rule)
 
-                try:
-                    # filter out containers that matched
-                    # and save the names of all the ones that matched
-                    (self.containers, matched) = jq.all(  # pylint: disable=I1101
-                        f"""
-                        map(select({rule["containerFilter"]} | not)),
-                        map(select({rule["containerFilter"]}) | (.namespace + "/" + .imageName))
-                        """,
-                        self.containers,
-                    )
-                except ValueError as err:
-                    sys.exit(
-                        f"Error whilst processing container triage rule '{rule['matches']}' - "
-                        f"check the jq filter for this rule. Error was:\n{err}"
-                    )
+        finding_rules = []
+        if "vulnerabilities" in rules:
+            finding_rules += rules["vulnerabilities"]
+        if "complianceIssues" in rules:
+            finding_rules += rules["complianceIssues"]
+        for rule in finding_rules:
+            if expired(rule):
+                self.expired_rules.append(rule)
+            else:
+                self._finding_rules.append(rule)
 
-                new_container_count, new_vuln_count, new_compliance_count = self.count()
-                assert container_count - new_container_count == len(matched)
-                self._rule_stats.append(
-                    RuleStat(
-                        RuleType.Container,
-                        rule,
-                        container_count - new_container_count,
-                        vuln_count - new_vuln_count,
-                        compliance_count - new_compliance_count,
-                        matched,
-                        [],
-                    )
+    def triage(self) -> None:
+        """filter the data based on rules, updating the instance's data in place"""
+
+        for rule in self._container_rules:
+            container_count, vuln_count, compliance_count = self.count()
+
+            try:
+                # filter out containers that matched
+                # and save the names of all the ones that matched
+                (self.containers, matched) = jq.all(  # pylint: disable=I1101
+                    f"""
+                    map(select({rule["containerFilter"]} | not)),
+                    map(select({rule["containerFilter"]}) | (.namespace + "/" + .imageName))
+                    """,
+                    self.containers,
                 )
+            except ValueError as err:
+                raise ValueError(
+                    f"Error whilst processing container triage rule '{rule['matches']}' - "
+                    f"check the jq filter for this rule. Error was:\n{err}"
+                ) from err
+
+            new_container_count, new_vuln_count, new_compliance_count = self.count()
+            assert container_count - new_container_count == len(matched)
+            self._rule_stats.append(
+                RuleStat(
+                    RuleType.Container,
+                    rule,
+                    container_count - new_container_count,
+                    vuln_count - new_vuln_count,
+                    compliance_count - new_compliance_count,
+                    matched,
+                    [],
+                )
+            )
 
         # The vulns and compliance rules are structurally identical, so process them together
-        if "vulnerabilities" not in rules:
-            rules["vulnerabilities"] = []
-        if "complianceIssues" not in rules:
-            rules["complianceIssues"] = []
-        for rule in rules["vulnerabilities"] + rules["complianceIssues"]:
+        for rule in self._finding_rules:
             container_count, vuln_count, compliance_count = self.count()
 
             if "complianceFilter" in rule:
@@ -263,10 +317,10 @@ class Results:
                     self.containers,
                 )
             except ValueError as err:
-                sys.exit(
+                raise ValueError(
                     f"Error whilst processing triage rule '{rule['matches']}' "
                     f"check the jq filter(s) for this rule. Error was:\n{err}"
-                )
+                ) from err
 
             new_container_count, new_vuln_count, new_compliance_count = self.count()
 
@@ -308,16 +362,23 @@ class Results:
         self.print_rule_stats()
         print()
 
+        if len(self.expired_rules) > 0:
+            print(
+                "The following rules have expired and were ignored:\n\t- "
+                + "\n\t- ".join([rule["matches"] for rule in self.expired_rules])
+            )
+            print()
+
         if len(self.containers) > 0:
             self.print_findings()
             print()
 
             if finding_stats:
-                if len(self.compliance_stats) > 0:
+                if len(self._compliance_stats) > 0:
                     print(
                         tabulate(
                             sorted(
-                                self.compliance_stats.items(),
+                                self._compliance_stats.items(),
                                 key=operator.itemgetter(1),
                                 reverse=True,
                             ),
@@ -327,11 +388,11 @@ class Results:
                     )
                     print()
 
-                if len(self.vuln_stats) > 0:
+                if len(self._vuln_stats) > 0:
                     print(
                         tabulate(
                             sorted(
-                                self.vuln_stats.items(), key=operator.itemgetter(1), reverse=True
+                                self._vuln_stats.items(), key=operator.itemgetter(1), reverse=True
                             ),
                             headers=["Untriaged Vulnerability", "Occurrences"],
                             tablefmt="psql",
@@ -339,6 +400,19 @@ class Results:
                     )
         else:
             print("No untriaged findings, nice!")
+
+        rule_issues = [
+            rule["issue"]
+            for rule in (self._container_rules + self._finding_rules)
+            if "issue" in rule
+        ]
+        if len(rule_issues) > 0:
+            print("\nOutstanding issues in triage rules: ")
+            print("\t" + "\n\t".join(rule_issues))
+            print(
+                "Once an issue is closed, the corresponding triage rule "
+                "should be removed so regressions will be detected."
+            )
 
     def print_rule_stats(self) -> None:
         """ Print counts of how many findings each rule suppressed """
@@ -394,8 +468,8 @@ class Results:
     def print_findings(self) -> None:
         """ Print compliance issues in a human-friendly manner """
 
-        self.compliance_stats = defaultdict(int)
-        self.vuln_stats = defaultdict(int)
+        self._compliance_stats = defaultdict(int)
+        self._vuln_stats = defaultdict(int)
 
         # findings[hash]=(ContainerID, issues,vulns)
         findings: List[Tuple[ContainerID, List[str], List[str]]] = []
@@ -410,7 +484,7 @@ class Results:
                     package = f' in {issue["packageName"]}'
                 issue_str = f'{issue["id"]}: {issue["title"]}{cve}{package}'
                 vulns.append(issue_str)
-                self.compliance_stats[issue_str] += 1
+                self._compliance_stats[issue_str] += 1
 
             issues = []
             for vuln in result["vulnerabilities"]:
@@ -428,7 +502,7 @@ class Results:
                 if vuln["status"]:
                     status = " " + vuln["status"]
                 issues.append(f"{vid}{title}{package}{sev}{status}")
-                self.vuln_stats[f"{vid}{title}{package}"] += 1
+                self._vuln_stats[f"{vid}{title}{package}"] += 1
 
             findings.append((ContainerID(result), vulns, issues))
 
@@ -513,7 +587,7 @@ class Api:
         valid_collections = [col["name"] for col in self._get("current/collections", {})]
         for col in self.collections:
             if col not in valid_collections:
-                sys.exit(
+                raise ValueError(
                     f"Error: collection {col} doesn't exist. Valid collections: \n\t"
                     + "\n\t".join(sorted(valid_collections))
                 )

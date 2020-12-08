@@ -28,6 +28,13 @@ complianceIssues:
     rationale: This is worth doing, but isn't critical as the chance of RCE in this image is tiny.
     issue: PROJ-321
 
+  - matches: Twistlock agent
+    containerFilter: .namespace == "twistlockdefender"
+    complianceFilter: "true"
+    rationale: We've addressed all of the compliance issues in dev; should have pushed to prod by 1st dec.
+    issue: PROJ-456
+    expires: "2020-12-08"
+
 # rules to ignore specific vulnerabilities (either globally or for matching containers)
 vulnerabilities:
   - matches: endpoints cve-2019-9948
