@@ -1,6 +1,6 @@
 # Prisma Cloud Pipeline Triage
 
-Export Prisma Cloud container findings to a local CI pipeline, and identify un-triaged findings.
+Export Prisma Cloud container findings to a CI pipeline, and identify un-triaged findings.
 
 Prisma Cloud's container scanning feature (formerly called Twistlock) has a web UI to review findings in. You can also
 define
@@ -116,10 +116,10 @@ To run the tool locally, try this from a directory that contains a `triage.yaml`
 
 ```sh
 export TOKEN=$(http $API/v1/authenticate username=$USER password=$PASS | jq -r .token)
-docker run --rm -e TOKEN=$TOKEN -v $(pwd):/mnt prisma-cloud-triage --api=$API --rules=triage.yaml --collections=mycol,anothercol --results=results.json
+docker run --rm -e TOKEN=$TOKEN -v $(pwd):/mnt prisma-cloud-pipeline --api=$API --rules=triage.yaml --collections=mycol,anothercol --results=results.json
 ```
 
-Full usage can be found with `docker run --rm prisma-cloud-triage --help`.
+Full usage can be found with `docker run --rm prisma-cloud-pipeline --help`.
 
 The recommended way to run the tool is via the docker container in your pipeline. Here's an example gitlab job
 definition, where USER and PASS are predefined CI variables for an account that can read from the API:
@@ -127,7 +127,7 @@ definition, where USER and PASS are predefined CI variables for an account that 
 ```yaml
 scan:
   image:
-    name: prisma-cloud-triage
+    name: prisma-cloud-pipeline
     entrypoint: [''] # allow gitlab to run its own commands
   variables:
     API: https//twistlock.example.com:8083/api
@@ -135,7 +135,7 @@ scan:
     - export TOKEN=$(http --ignore-stdin $API/v1/authenticate username="$USER" password="$PASS" | jq -r .token)
     # this command and hence job will fail (due to --check) if there are any findings in the col1 or col2 collections
     # that are not matched by a rule in prisma-triage.yaml in the repo
-    - prisma-cloud-triage --api=$API --collections=col1,col2 --rules=prisma-triage.yaml --check
+    - prisma-cloud-pipeline --api=$API --collections=col1,col2 --rules=prisma-triage.yaml --check
       --results=untriaged-findings.json --triaged-findings=triaged-findings.json
   artifacts:
     when: always
@@ -153,9 +153,9 @@ You can also use it in an offline manner, where it doesn't have direct access to
 accessing the API.
 
 If your API has a certificate from an untrusted root, set the REQUESTS_CA_BUNDLE environment variable, e.g.:
-`REQUESTS_CA_BUNDLE=mycert.pem prisma-cloud-triage $API ...`
+`REQUESTS_CA_BUNDLE=mycert.pem prisma-cloud-pipeline $API ...`
 
-Specify `--finding_stats` to get a count of how many times each untriaged finding occurred.
+Specify `--finding-stats` to get a count of how many times each untriaged finding occurred.
 
 ## Triage Rules
 
@@ -229,4 +229,7 @@ matched.
 
 # Limitations
 
-This tool does not handle
+This tool does not handle "runtime events" findings. Whilst they could be incorporated in the same manner that
+vulnerabilities and compliance issues are currently handled, runtime events are inherently more ephemeral and thus less
+well suited to being managed in the same pipeline that builds and deployment use. If you want to follow a similar
+approach to triage and handling of runtime events, perhaps running it in a dedicated secops pipeline, PRs are welcome!
