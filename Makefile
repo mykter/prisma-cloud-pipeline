@@ -14,7 +14,7 @@ build: version
 # tried to use poetry-dynamic-versioning, but it messed up my python install in a big way.
 .PHONY: version
 version: # slightly convoluted approach to ensure that this fails if dunamai fails
-	VERSION="$$(dunamai from any)" && [ -n "$$VERSION" ] && poetry version "$$VERSION"
+	VERSION="$$(dunamai from git)" && [ -n "$$VERSION" ] && poetry version "$$VERSION"
 
 .PHONY: lint
 lint:
@@ -32,3 +32,4 @@ test:
 .PHONY: clean
 clean:
 	rm -rf dist out/* prisma_cloud_pipeline/__pycache__
+	poetry version 0.0.0

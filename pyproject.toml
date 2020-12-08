@@ -7,7 +7,7 @@ line-length = 100
 
 [tool.poetry]
 name = "prisma-cloud-pipeline" 
-version = "0.1.0.post1.dev0+13ece30" # replaced during build, see Makefile
+version = "0.0.0" # replaced during build, see Makefile
 description = "Export Prisma Cloud container findings to a CI pipeline, and identify un-triaged findings" 
 
 license = "MIT"
