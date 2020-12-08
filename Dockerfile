@@ -20,7 +20,10 @@ RUN poetry config virtualenvs.create false
 # We can't just do a plain 'poetry install' because of https://github.com/python-poetry/poetry/issues/1382
 WORKDIR /tmp/install
 COPY . ./
-RUN make clean && poetry install -n --no-root && make && pip install dist/*.whl
+RUN make clean && \
+    poetry install -n --no-root && \
+    make && \
+    pip install dist/*.whl
 
 RUN useradd app --create-home
 # for users who install additional tools via pip
