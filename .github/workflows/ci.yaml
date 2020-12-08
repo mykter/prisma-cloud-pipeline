@@ -95,7 +95,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: docker.pkg.github.com/thalescpl-io/prisma-cloud-pipeline/prisma-cloud-pipeline
+          images: safenetlabs/prisma-cloud-pipeline
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
