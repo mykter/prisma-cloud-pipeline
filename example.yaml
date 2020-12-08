@@ -1,0 +1,36 @@
+# All rules must have a 'matches' and a 'rationale' entry.
+# 'matches' is a short title describing what this rule is for.
+# Any rule may have an 'issue' entry, referencing a bug to fix the cause of the finding.
+
+# Container rules must have only a containerFilter.
+# Compliance rules must have a complianceFilter and may have a containerFilter.
+# Vulnerability rules must have a vulnFilter and may have a containerFilter.
+
+# Filters are jq filters that return true or false. See the README for more details.
+
+# rules to ignore all findings in matching containers
+containers:
+  - matches: GKE system components
+    containerFilter: .namespace | test("^kube-system$")
+    rationale: >-
+      We use an auto-updating gke instance that gets patches - these will either be false positives or will get patched shortly by Google.
+      There's nothing we can or should do about them.
+
+# rules to ignore specific compliance rules (either globally or for matching containers)
+complianceIssues:
+  - matches: Limit memory
+    complianceFilter: .id == 510
+    rationale: We don't run untrusted containers; whilst this is a nice to have, it is very low priority.
+
+  - matches: Running our containers as root
+    containerFilter: .imageName | test("gcr.io/myproject/image-prefix")
+    complianceFilter: .id == 599
+    rationale: This is worth doing, but isn't critical as the chance of RCE in this image is tiny.
+    issue: PROJ-321
+
+# rules to ignore specific vulnerabilities (either globally or for matching containers)
+vulnerabilities:
+  - matches: endpoints cve-2019-9948
+    containerFilter: .imageName | test("^gcr.io/endpoints-release/endpoints-runtime")
+    vulnFilter: .cve == "CVE-2019-9948"
+    rationale: Example of ignoring a specific vuln for a specific container.

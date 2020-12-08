@@ -1,0 +1,418 @@
+[
+  {
+    "_id": "sha256:a1769ab92a8fd755f060673e8ea9eff9f8a9b84e5c6e7544a1c24abebcf54e5c_twistlock",
+    "profileHash": 1,
+    "type": "kubernetes",
+    "imageNames": [
+      "registry-auth.twistlock.com/tw_nnnjsnqcpi04fftowuy02qm5qqmntvih/twistlock/defender:defender_20_04_163"
+    ],
+    "namespace": "twistlockdefender",
+    "incomingConnections": [],
+    "internet": {
+      "outgoing": [
+        {
+          "port": 443,
+          "protocol": "TCP"
+        },
+        {
+          "port": 80,
+          "protocol": "TCP"
+        }
+      ]
+    },
+    "tls": false,
+    "labels": [
+      "app:twistlock-defender",
+      "annotation.io.kubernetes.container.restartCount:0",
+      "io.kubernetes.docker.type:container",
+      "url:https://access.redhat.com/containers/#/registry.access.redhat.com/ubi7-minimal/images/7.7-211",
+      "twistlock.model.name:twistlock",
+      "annotation.io.kubernetes.container.terminationMessagePath:/dev/termination-log",
+      "io.kubernetes.container.name:twistlock-defender",
+      "summary:Provides the latest release of the minimal Red Hat Universal Base Image 7.",
+      "controller-revision-hash:dc9844984",
+      "annotation.io.kubernetes.container.terminationMessagePolicy:File",
+      "architecture:x86_64",
+      "name:ubi7-minimal",
+      "io.kubernetes.pod.name:twistlock-defender-ds-2slt5",
+      "io.kubernetes.pod.namespace:twistlockdefender",
+      "authoritative-source-url:registry.access.redhat.com",
+      "build-date:2019-11-19T13:25:35.659917",
+      "com.redhat.component:ubi7-minimal-container",
+      "vcs-ref:22f607d32349cd03d6c60f3f5e23070d26a70927",
+      "annotation.container.apparmor.security.beta.kubernetes.io/twistlock-defender:unconfined",
+      "com.redhat.build-host:cpt-1008.osbs.prod.upshift.rdu2.redhat.com",
+      "distribution-scope:public",
+      "io.kubernetes.container.logpath:/var/log/pods/twistlockdefender_twistlock-defender-ds-2slt5_08e1d8af-6db7-47bf-a0b5-f802de20df4e/twistlock-defender/0.log",
+      "io.kubernetes.sandbox.id:62cc7c4018ddea7415b972ab922c3826b9e98c95bd51cdfee86e489081f0323f",
+      "maintainer:Red Hat, Inc.",
+      "vendor:Red Hat, Inc.",
+      "com.redhat.license_terms:https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI",
+      "io.k8s.description:The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
+      "io.kubernetes.pod.uid:08f1d8af-6db7-47bf-a0b5-f802de20df4e",
+      "version:7.7",
+      "pod-template-generation:1",
+      "description:The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.",
+      "io.k8s.display-name:Red Hat Universal Base Image 7 Minimal",
+      "vcs-type:git",
+      "release:211",
+      "annotation.io.kubernetes.container.hash:59e39693",
+      "annotation.io.kubernetes.pod.terminationGracePeriod:30",
+      "io.openshift.tags:minimal rhel7"
+    ],
+    "containerCount": 7,
+    "firewallProtected": false,
+    "learning": false,
+    "distro": "Red Hat Enterprise Linux Server 7.8 (Maipo)",
+    "hostname": "myhost-1",
+    "hostCount": 7,
+    "processesCount": 72,
+    "networkCount": 2,
+    "filesystemCount": 152,
+    "vulnerabilityDistribution": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "total": 0
+    },
+    "complianceDistribution": {
+      "critical": 0,
+      "high": 1,
+      "medium": 0,
+      "low": 0,
+      "total": 1
+    },
+    "geoip": {
+      "countries": [
+        {
+          "ip": "1.2.3.4",
+          "code": "US",
+          "modified": "2020-12-01T17:46:20.854Z"
+        }
+      ],
+      "modified": "2020-12-02T09:10:27.417Z"
+    },
+    "incidentCount": 0,
+    "imageID": "sha256:a1769ab92a8fd755f060673e8ea9eff9f8a9b84e5c6e7544a1c24abebcf54e5c",
+    "label": "twistlock",
+    "imageName": "registry-auth.twistlock.com/tw_b7dhufpsitss5poueyqkhvmliod2zy4s/twistlock/defender:defender_20_04_163",
+    "k8s": {
+      "serviceAccount": "system:serviceaccount:twistlockdefender:twistlock-service",
+      "clusterRoles": [
+        {
+          "name": "twistlock-view",
+          "labels": [
+            {
+              "key": "app.kubernetes.io/managed-by",
+              "value": "Helm"
+            }
+          ],
+          "rules": [
+            {
+              "verbs": [
+                "list"
+              ],
+              "apiGroups": [
+                "rbac.authorization.k8s.io"
+              ],
+              "resources": [
+                "roles",
+                "rolebindings",
+                "clusterroles",
+                "clusterrolebindings"
+              ]
+            },
+            {
+              "verbs": [
+                "list"
+              ],
+              "apiGroups": [
+                "rbac.istio.io"
+              ],
+              "resources": [
+                "rbacconfigs",
+                "servicerolebindings",
+                "serviceroles"
+              ]
+            },
+            {
+              "verbs": [
+                "list"
+              ],
+              "apiGroups": [
+                "authentication.istio.io"
+              ],
+              "resources": [
+                "meshpolicies"
+              ]
+            },
+            {
+              "verbs": [
+                "list"
+              ],
+              "apiGroups": [
+                "networking.istio.io"
+              ],
+              "resources": [
+                "virtualservices",
+                "destinationrules",
+                "gateways",
+                "serviceentries"
+              ]
+            },
+            {
+              "verbs": [
+                "list"
+              ],
+              "apiGroups": [
+                "core"
+              ],
+              "resources": [
+                "pods",
+                "endpoints"
+              ]
+            }
+          ],
+          "roleBinding": "twistlock-view-binding"
+        }
+      ]
+    },
+    "hasDNSConnection": false,
+    "region": "us-central1-a",
+    "accountID": "mycloudaccount-1",
+    "vulnerabilities": [],
+    "complianceIssues": [
+      {
+        "text": "",
+        "id": 599,
+        "severity": "high",
+        "cvss": 0,
+        "status": "",
+        "cve": "",
+        "cause": "",
+        "description": "",
+        "title": "Container is running as root",
+        "vecStr": "",
+        "exploit": "",
+        "riskFactors": null,
+        "link": "",
+        "type": "container",
+        "packageName": "",
+        "packageVersion": "",
+        "layerTime": 0,
+        "templates": [],
+        "twistlock": true,
+        "published": 0,
+        "discovered": "0001-01-01T00:00:00Z"
+      },
+      {
+        "text": "",
+        "id": 51,
+        "severity": "high",
+        "cvss": 0,
+        "status": "",
+        "cve": "",
+        "cause": "",
+        "description": "AppArmor is an effective and easy-to-use Linux application security system. It is available\non quite a few Linux distributions by default such as Debian and Ubuntu",
+        "title": "(CIS_Docker_CE_v1.1.0 - 5.1) Verify AppArmor profile, if applicable",
+        "vecStr": "",
+        "exploit": "",
+        "riskFactors": null,
+        "link": "",
+        "type": "container",
+        "packageName": "",
+        "packageVersion": "",
+        "layerTime": 0,
+        "templates": [],
+        "twistlock": false,
+        "published": 0,
+        "discovered": "0001-01-01T00:00:00Z"
+      },
+      {
+        "text": "",
+        "id": 515,
+        "severity": "critical",
+        "cvss": 0,
+        "status": "",
+        "cve": "",
+        "cause": "",
+        "description": "Process ID (PID) namespaces isolate the process ID number space, meaning that processes\nin different PID namespaces can have the same PID. This is process level isolation between\ncontainers and the host",
+        "title": "(CIS_Docker_CE_v1.1.0 - 5.15) Do not share the host's process namespace",
+        "vecStr": "",
+        "exploit": "",
+        "riskFactors": null,
+        "link": "",
+        "type": "container",
+        "packageName": "",
+        "packageVersion": "",
+        "layerTime": 0,
+        "templates": [],
+        "twistlock": false,
+        "published": 0,
+        "discovered": "0001-01-01T00:00:00Z"
+      },
+      {
+        "text": "",
+        "id": 59,
+        "severity": "critical",
+        "cvss": 0,
+        "status": "",
+        "cve": "",
+        "cause": "",
+        "description": "The networking mode on a container when set to --net=host , skips placing the container\ninside separate network stack. In essence, this choice tells Docker to not containerize the\ncontainer's networking. This would network-wise mean that the container lives \"outside\"\nin the main Docker host and has full access to its network interfaces",
+        "title": "(CIS_Docker_CE_v1.1.0 - 5.9) Do not share the host's network namespace",
+        "vecStr": "",
+        "exploit": "",
+        "riskFactors": null,
+        "link": "",
+        "type": "container",
+        "packageName": "",
+        "packageVersion": "",
+        "layerTime": 0,
+        "templates": [],
+        "twistlock": false,
+        "published": 0,
+        "discovered": "0001-01-01T00:00:00Z"
+      },
+      {
+        "text": "",
+        "id": 520,
+        "severity": "critical",
+        "cvss": 0,
+        "status": "",
+        "cve": "",
+        "cause": "",
+        "description": "UTS namespaces provide isolation of two system identifiers: the hostname and the NIS\ndomain name. It is used for setting the hostname and the domain that is visible to running\nprocesses in that namespace. Processes running within containers do not typically require\nto know hostname and domain name. Hence, the namespace should not be shared with the\nhost",
+        "title": "(CIS_Docker_CE_v1.1.0 - 5.20) Do not share the host's UTS namespace",
+        "vecStr": "",
+        "exploit": "",
+        "riskFactors": null,
+        "link": "",
+        "type": "container",
+        "packageName": "",
+        "packageVersion": "",
+        "layerTime": 0,
+        "templates": [],
+        "twistlock": false,
+        "published": 0,
+        "discovered": "0001-01-01T00:00:00Z"
+      },
+      {
+        "text": "",
+        "id": 521,
+        "severity": "critical",
+        "cvss": 0,
+        "status": "",
+        "cve": "",
+        "cause": "",
+        "description": "Seccomp filtering provides a means for a process to specify a filter for incoming system\ncalls. The default Docker seccomp profile works on whitelist basis and allows 311 system\ncalls blocking all others. It should not be disabled unless it hinders your container\napplication usage",
+        "title": "(CIS_Docker_CE_v1.1.0 - 5.21) Do not disable default seccomp profile",
+        "vecStr": "",
+        "exploit": "",
+        "riskFactors": null,
+        "link": "",
+        "type": "container",
+        "packageName": "",
+        "packageVersion": "",
+        "layerTime": 0,
+        "templates": [],
+        "twistlock": false,
+        "published": 0,
+        "discovered": "0001-01-01T00:00:00Z"
+      },
+      {
+        "text": "",
+        "id": 525,
+        "severity": "high",
+        "cvss": 0,
+        "status": "",
+        "cve": "",
+        "cause": "",
+        "description": "A process can set the no_new_priv bit in the kernel. It persists across fork, clone and\nexecve. The no_new_priv bit ensures that the process or its children processes do not gain\nany additional privileges via suid or sgid bits. This way a lot of dangerous operations\nbecome a lot less dangerous because there is no possibility of subverting privileged\nbinaries",
+        "title": "(CIS_Docker_CE_v1.1.0 - 5.25) Restrict container from acquiring additional privileges",
+        "vecStr": "",
+        "exploit": "",
+        "riskFactors": null,
+        "link": "",
+        "type": "container",
+        "packageName": "",
+        "packageVersion": "",
+        "layerTime": 0,
+        "templates": [],
+        "twistlock": false,
+        "published": 0,
+        "discovered": "0001-01-01T00:00:00Z"
+      },
+      {
+        "text": "",
+        "id": 528,
+        "severity": "high",
+        "cvss": 0,
+        "status": "",
+        "cve": "",
+        "cause": "",
+        "description": "Attackers could launch a fork bomb with a single command inside the container. This fork\nbomb can crash the entire system and requires a restart of the host to make the system\nfunctional again. PIDs cgroup --pids-limit will prevent this kind of attacks by restricting\nthe number of forks that can happen inside a container at a given time",
+        "title": "(CIS_Docker_CE_v1.1.0 - 5.28) Use PIDs cgroup limit",
+        "vecStr": "",
+        "exploit": "",
+        "riskFactors": null,
+        "link": "",
+        "type": "container",
+        "packageName": "",
+        "packageVersion": "",
+        "layerTime": 0,
+        "templates": [],
+        "twistlock": false,
+        "published": 0,
+        "discovered": "0001-01-01T00:00:00Z"
+      },
+      {
+        "text": "",
+        "id": 531,
+        "severity": "critical",
+        "cvss": 0,
+        "status": "",
+        "cve": "",
+        "cause": "Mount /var/run is attached",
+        "description": "If the docker socket is mounted inside a container it would allow processes running within\nthe container to execute docker commands which effectively allows for full control of the\nhost",
+        "title": "(CIS_Docker_CE_v1.1.0 - 5.31) Do not mount the Docker socket inside any containers",
+        "vecStr": "",
+        "exploit": "",
+        "riskFactors": null,
+        "link": "",
+        "type": "container",
+        "packageName": "",
+        "packageVersion": "",
+        "layerTime": 0,
+        "templates": [],
+        "twistlock": false,
+        "published": 0,
+        "discovered": "0001-01-01T00:00:00Z"
+      },
+      {
+        "text": "",
+        "id": 55,
+        "severity": "critical",
+        "cvss": 0,
+        "status": "",
+        "cve": "",
+        "cause": "Top level / folder is mounted",
+        "description": "Sensitive host system directories such as below should not be allowed to be mounted as\ncontainer volumes especially in read-write mode",
+        "title": "(CIS_Docker_CE_v1.1.0 - 5.5) Do not mount sensitive host system directories on containers",
+        "vecStr": "",
+        "exploit": "",
+        "riskFactors": null,
+        "link": "",
+        "type": "container",
+        "packageName": "",
+        "packageVersion": "",
+        "layerTime": 0,
+        "templates": [],
+        "twistlock": false,
+        "published": 0,
+        "discovered": "0001-01-01T00:00:00Z"
+      }
+    ]
+  }
+]

@@ -1,0 +1,121 @@
+name: CI
+
+on: push
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: install poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: "1.1.4"
+      - name: Set up Poetry virtual environment
+        run: poetry env use python3.9
+      - name: Install project dependencies
+        run: poetry install
+
+      - name: Lint
+        run: make lint
+
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ["3.6", "3.7", "3.8", "3.9"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: install poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: "1.1.4"
+      - name: Set up Poetry virtual environment
+        run: poetry env use python${{ matrix.python-version }}
+      - name: Install project dependencies
+        run: poetry install
+
+      - name: Test
+        run: poetry run make test
+
+  pypi:
+    needs: [test, lint]
+    if: github.event_name == 'release'
+
+    runs-on: ubuntu-latest
+
+    env: # see https://github.com/python-poetry/poetry/issues/2801
+      POETRY_HTTP_BASIC_PYPI_USERNAME: __token__
+      POETRY_HTTP_BASIC_PYPI_PASSWORD: ${{ secrets.pypi_token }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: install poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: "1.1.4"
+
+      - name: Set up Poetry virtual environment
+        run: poetry env use python3.9
+
+      - name: Set version
+        run: make version
+
+      - name: Publish
+        run: poetry publish --build --no-interaction
+
+  docker:
+    needs: [test, lint]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Get docker tags
+        id: docker_meta
+        uses: crazy-max/ghaction-docker-meta@v1
+        with:
+          images: test/prisma-cloud-pipeline
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+
+      - name: Build (and push for releases)
+        id: build_push
+        uses: docker/build-push-action@v2
+        with:
+          push: ${{ github.event_name == 'release' }}
+          tags: ${{ steps.docker_meta.outputs.tags }}
+
+      - name: Image digest
+        run: echo ${{ steps.build_push.outputs.digest }}

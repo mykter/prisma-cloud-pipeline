@@ -1,0 +1,61 @@
+Prior to triage filter, got 2 distinct running containers with findings, 1 vulnerabilities, 20 compliance issues
+After triage filter, got 1 distinct running containers with findings, 0 vulnerabilities, 10 compliance issues
+
+Saved untriaged findings
+Saved triaged findings
+
++--------------------------------+-------------+-----------------+--------------------+
+| Triage Rule                    |   Container |   Vulnerability |   Compliance Issue |
+|                                |     Matches |         Matches |            Matches |
+|--------------------------------+-------------+-----------------+--------------------|
+| GKE system components          |           1 |               1 |                 10 |
+| endpoints cve-2019-9948        |           0 |               0 |                  0 |
+| Limit memory                   |           0 |               0 |                  0 |
+| Running our containers as root |           0 |               0 |                  0 |
++--------------------------------+-------------+-----------------+--------------------+
+For container rules, the entries in the Vulnerabilities and Compliance Issues columns refer to the number of findings the matched containers had.
+For vuln/compliance rules, the entries in the Containers column refer to the number of containers that had no findings left after this rule was processed.
+For details on what each rule matched, review the file specified with the --triaged-findings flag.
+
+Warning: the following rules didn't match any findings, you may want to check the filters are correct, and delete rules where the finding has been addressed:
+	endpoints cve-2019-9948
+	Limit memory
+	Running our containers as root - has issue PROJ-321 been resolved?
+
+╒═══════════════════════════════════╤═════════════════════════════╤════════════════════════════════════════════════════════════════════════════════════╕
+│ Container                         │ Untriaged Vulnerabilities   │ Untriaged Compliance Issues                                                        │
+╞═══════════════════════════════════╪═════════════════════════════╪════════════════════════════════════════════════════════════════════════════════════╡
+│ twistlock-defender                │                             │ 599: Container is running as root                                                  │
+│ ns:   twistlockdefender           │                             │ 51: (CIS_Docker_CE_v1.1.0 - 5.1) Verify AppArmor profile, if applicable            │
+│ img:  defender:defender_20_04_163 │                             │ 515: (CIS_Docker_CE_v1.1.0 - 5.15) Do not share the host's process namespace       │
+│ acct: mycloudaccount-1            │                             │ 59: (CIS_Docker_CE_v1.1.0 - 5.9) Do not share the host's network namespace         │
+│                                   │                             │ 520: (CIS_Docker_CE_v1.1.0 - 5.20) Do not share the host's UTS namespace           │
+│                                   │                             │ 521: (CIS_Docker_CE_v1.1.0 - 5.21) Do not disable default seccomp profile          │
+│                                   │                             │ 525: (CIS_Docker_CE_v1.1.0 - 5.25) Restrict container from acquiring additional    │
+│                                   │                             │      privileges                                                                    │
+│                                   │                             │ 528: (CIS_Docker_CE_v1.1.0 - 5.28) Use PIDs cgroup limit                           │
+│                                   │                             │ 531: (CIS_Docker_CE_v1.1.0 - 5.31) Do not mount the Docker socket inside any       │
+│                                   │                             │      containers                                                                    │
+│                                   │                             │ 55: (CIS_Docker_CE_v1.1.0 - 5.5) Do not mount sensitive host system directories on │
+│                                   │                             │      containers                                                                    │
+╘═══════════════════════════════════╧═════════════════════════════╧════════════════════════════════════════════════════════════════════════════════════╛
+
++-----------------------------------------------------------------------------------------------+---------------+
+| Untriaged Compliance Issue                                                                    |   Occurrences |
+|-----------------------------------------------------------------------------------------------+---------------|
+| 599: Container is running as root                                                             |             1 |
+| 51: (CIS_Docker_CE_v1.1.0 - 5.1) Verify AppArmor profile, if applicable                       |             1 |
+| 515: (CIS_Docker_CE_v1.1.0 - 5.15) Do not share the host's process namespace                  |             1 |
+| 59: (CIS_Docker_CE_v1.1.0 - 5.9) Do not share the host's network namespace                    |             1 |
+| 520: (CIS_Docker_CE_v1.1.0 - 5.20) Do not share the host's UTS namespace                      |             1 |
+| 521: (CIS_Docker_CE_v1.1.0 - 5.21) Do not disable default seccomp profile                     |             1 |
+| 525: (CIS_Docker_CE_v1.1.0 - 5.25) Restrict container from acquiring additional privileges    |             1 |
+| 528: (CIS_Docker_CE_v1.1.0 - 5.28) Use PIDs cgroup limit                                      |             1 |
+| 531: (CIS_Docker_CE_v1.1.0 - 5.31) Do not mount the Docker socket inside any containers       |             1 |
+| 55: (CIS_Docker_CE_v1.1.0 - 5.5) Do not mount sensitive host system directories on containers |             1 |
++-----------------------------------------------------------------------------------------------+---------------+
+
+
+Outstanding issues in triage rules: 
+	PROJ-321
+Once an issue is closed, the corresponding triage rule should be removed so regressions will be detected.

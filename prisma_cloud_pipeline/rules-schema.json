@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "we can't use allOf to reduce duplication because it breaks the use of additionalProperties",
+  "type": "object",
+  "properties": {
+    "containers": {
+      "type": "array",
+      "items": {
+        "properties": {
+          "matches": { "type": "string" },
+          "rationale": { "type": "string" },
+          "issue": { "issue": "string" },
+          "containerFilter": { "type": "string" }
+        },
+        "required": ["matches", "rationale", "containerFilter"],
+        "additionalProperties": false
+      }
+    },
+    "vulnerabilities": {
+      "type": "array",
+      "items": {
+        "properties": {
+          "matches": { "type": "string" },
+          "rationale": { "type": "string" },
+          "issue": { "issue": "string" },
+          "containerFilter": { "type": "string" },
+          "vulnFilter": { "type": "string" }
+        },
+        "required": ["matches", "rationale", "vulnFilter"],
+        "additionalProperties": false
+      }
+    },
+    "complianceIssues": {
+      "type": "array",
+      "items": {
+        "properties": {
+          "matches": { "type": "string" },
+          "rationale": { "type": "string" },
+          "issue": { "issue": "string" },
+          "containerFilter": { "type": "string" },
+          "complianceFilter": { "type": "string" }
+        },
+        "required": ["matches", "rationale", "complianceFilter"],
+        "additionalProperties": false
+      }
+    },
+    "additionalProperties": false
+  }
+}

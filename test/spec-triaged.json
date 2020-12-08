@@ -1,0 +1,26 @@
+{
+  "containers": [
+    {
+      "rule": "GKE system components",
+      "containers": [
+        "kube-system/k8s.gcr.io/ip-masq-agent-amd64:v2.4.1"
+      ]
+    }
+  ],
+  "vulnerabilities": [
+    {
+      "rule": "endpoints cve-2019-9948",
+      "findings": []
+    }
+  ],
+  "complianceIssues": [
+    {
+      "rule": "Limit memory",
+      "findings": []
+    },
+    {
+      "rule": "Running our containers as root",
+      "findings": []
+    }
+  ]
+}
