@@ -7,7 +7,7 @@ line-length = 100
 
 [tool.poetry]
 name = "prisma-cloud-pipeline" 
-version = "0.0.0" # replaced during build, see Makefile
+version = "0.1.0.post1.dev0+13ece30" # replaced during build, see Makefile
 description = "Export Prisma Cloud container findings to a CI pipeline, and identify un-triaged findings" 
 
 license = "MIT"
@@ -32,7 +32,8 @@ pyyaml = "~5.3"
 [tool.poetry.dev-dependencies]
 mypy = ">=0.790"
 pylint = ">=2.6.0"
-black = {version = "^20.8b1", allow-prereleases = true}
+black = { version = "^20.8b1", allow-prereleases = true }
+dunamai = "^1.5.0"
 
 [tool.poetry.scripts]
 prisma-cloud-pipeline = 'prisma_cloud_pipeline.__main__:main'
