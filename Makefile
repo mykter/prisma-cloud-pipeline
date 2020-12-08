@@ -14,6 +14,7 @@ lint:
 
 .PHONY: test
 test:
+	[ -d out ] || mkdir out
 	python3 -m prisma_cloud_pipeline --data=test/data.json --rules=example.yaml --results=out/test-results.json --triaged-findings=out/test-triaged.json --finding-stats > out/test-stdout
 	diff --brief out/test-stdout test/spec-stdout
 	diff --brief out/test-results.json test/spec-results.json
