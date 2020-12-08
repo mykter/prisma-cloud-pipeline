@@ -234,7 +234,7 @@ reports how many containers/findings each rule suppressed - you can review this 
 For a more thorough review, use the `--triaged-findings` flag to specify a file to save details on what each rule
 matched.
 
-# Limitations
+## Limitations
 
 This tool does not handle "runtime events" findings. Whilst they could be incorporated in the same manner that
 vulnerabilities and compliance issues are currently handled, runtime events are inherently more ephemeral and thus less
