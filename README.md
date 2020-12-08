@@ -118,7 +118,7 @@ definition, where USER and PASS are predefined CI variables for an account that 
 ```yaml
 scan:
   image:
-    name: prisma-cloud-pipeline
+    name: safenetlabs/prisma-cloud-pipeline
     entrypoint: [''] # allow gitlab to run its own commands
   variables:
     API: https//twistlock.example.com:8083/api
@@ -136,7 +136,7 @@ scan:
   allow_failure: true # we want to be alerted if there is a new finding, but we don't want it to stop the pipeline from working
 ```
 
-Full usage can be found with `docker run --rm prisma-cloud-pipeline --help`.
+Full usage can be found with `docker run --rm safenetlabs/prisma-cloud-pipeline --help`.
 
 The text output from the tool provides a summary of all of the untriaged findings; the full details (as returned by the
 API) are saved to the file specified by the --results flag (if present).
