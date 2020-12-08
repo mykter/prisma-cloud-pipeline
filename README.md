@@ -112,16 +112,7 @@ Once an issue is closed, the corresponding triage rule should be removed so regr
 
 ## Usage
 
-To run the tool locally, try this from a directory that contains a `triage.yaml` file with your rules:
-
-```sh
-export TOKEN=$(http $API/v1/authenticate username=$USER password=$PASS | jq -r .token)
-docker run --rm -e TOKEN=$TOKEN -v $(pwd):/mnt prisma-cloud-pipeline --api=$API --rules=triage.yaml --collections=mycol,anothercol --results=results.json
-```
-
-Full usage can be found with `docker run --rm prisma-cloud-pipeline --help`.
-
-The recommended way to run the tool is via the docker container in your pipeline. Here's an example Gitlab job
+The recommended way to run the tool is via the Docker container in your pipeline. Here's an example Gitlab job
 definition, where USER and PASS are predefined CI variables for an account that can read from the API:
 
 ```yaml
@@ -145,6 +136,8 @@ scan:
   allow_failure: true # we want to be alerted if there is a new finding, but we don't want it to stop the pipeline from working
 ```
 
+Full usage can be found with `docker run --rm prisma-cloud-pipeline --help`.
+
 The text output from the tool provides a summary of all of the untriaged findings; the full details (as returned by the
 API) are saved to the file specified by the --results flag (if present).
 
@@ -156,6 +149,18 @@ If your API has a certificate from an untrusted root, set the REQUESTS_CA_BUNDLE
 `REQUESTS_CA_BUNDLE=mycert.pem prisma-cloud-pipeline $API ...`
 
 Specify `--finding-stats` to get a count of how many times each untriaged finding occurred.
+
+### Local use
+
+To run the tool locally, try this from a directory that contains a `triage.yaml` file with your rules:
+
+```sh
+pip install prisma-cloud-pipeline
+export TOKEN=$(http $API/v1/authenticate username=$USER password=$PASS | jq -r .token)
+prisma-cloud-pipeline --api=$API --rules=triage.yaml --collections=mycol,anothercol --results=results.json
+```
+
+You can of course also use the Docker container locally, instead of installing via pip.
 
 ## Triage Rules
 
