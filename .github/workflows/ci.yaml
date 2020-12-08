@@ -1,8 +1,9 @@
 name: CI
 
 on:
-  - push
-  - release
+  push:
+  release:
+    types: [published]
 
 jobs:
   lint:
