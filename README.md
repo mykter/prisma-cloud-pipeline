@@ -136,9 +136,6 @@ scan:
   allow_failure: true # we want to be alerted if there is a new finding, but we don't want it to stop the pipeline from working
 ```
 
-For an example Github Actions integration, refer to the test job in this repository's
-[workflow](./.github/workflows/ci.yaml).
-
 Full usage can be found with `docker run --rm safenetlabs/prisma-cloud-pipeline --help`.
 
 The text output from the tool provides a summary of all of the untriaged findings; the full details (as returned by the
