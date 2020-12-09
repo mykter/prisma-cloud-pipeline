@@ -5,19 +5,19 @@ Export Prisma Cloud container findings to a CI pipeline, and identify un-triaged
 Prisma Cloud's container scanning feature (formerly called Twistlock) has a web UI to review findings in. You can also
 define
 [triage rules](https://docs.twistlock.com/docs/compute_edition/vulnerability_management/vuln_management_rules.html) to
-(temporarily) ignore findings. There are a number of
-[example integrations](https://github.com/twistlock/sample-code/blob/master/CI/) into CI pipelines, which all follow the
-same pattern: scan a specific docker image that is present in the pipeline, report any issues found, and optionally fail
-if a certain 'badness' threshold is met.
+ignore findings. There are a number of [example integrations](https://github.com/twistlock/sample-code/blob/master/CI/)
+into CI pipelines, which all follow the same pattern: scan a specific docker image that is present in the pipeline,
+report any issues found, and optionally fail if a certain 'badness' threshold is met. These are useful, but limited.
 
-The motivation for this project is to get security findings closer to developers, and integrate the entire process with
-existing project CI pipelines. All findings (for specified collections) are retrieved from the Prisma Cloud API, and a
-set of locally defined triage rules are applied to suppress specific findings or containers from the main output.
+The motivation for this project is to get _all_ findings closer to developers, not just findings for a specific
+container, and integrate the entire process with existing project CI pipelines. All findings (for specified collections)
+are retrieved from the Prisma Cloud API, and a set of locally defined triage rules are applied to suppress specific
+findings or containers from the main output.
 
 This:
 
-1.  Provides clear visibility of any new un-triaged findings, and optionally allows the pipeline to fail if there are
-    any.
+1.  Provides clear visibility of any new un-triaged findings, wherever they are in a deployment, and optionally allows
+    the pipeline to fail if there are any.
 
 2.  Enables triage of issues to follow the usual merge/pull request approach. If there are any new findings or false
     positives, they need to be either fixed or added to the triage rules file before the pipeline passes again.
@@ -136,6 +136,9 @@ scan:
   allow_failure: true # we want to be alerted if there is a new finding, but we don't want it to stop the pipeline from working
 ```
 
+For an example Github Actions integration, refer to the test job in this repository's
+[workflow](./.github/workflows/ci.yaml).
+
 Full usage can be found with `docker run --rm safenetlabs/prisma-cloud-pipeline --help`.
 
 The text output from the tool provides a summary of all of the untriaged findings; the full details (as returned by the
@@ -152,7 +155,8 @@ Specify `--finding-stats` to get a count of how many times each untriaged findin
 
 ### Local use
 
-To run the tool locally, try this from a directory that contains a `triage.yaml` file with your rules:
+To run the tool locally, Python 3.8+ is required. Try this from a directory that contains a `triage.yaml` file with your
+rules:
 
 ```sh
 pip install prisma-cloud-pipeline
@@ -205,8 +209,8 @@ propagate.
 The format of the filters is a [jq filter](https://stedolan.github.io/jq/manual/) that outputs `true` if the filter
 matches (i.e. the container/finding has been triaged) and `false` otherwise.
 
-The input to the filters - the value of `.` - is data taken directly from the Prisma Cloud Compute API - this means you
-can filter on any attributes that Prisma reports. The container filter input is an entry from the `radar/containers` API
+The input to the filters - the value of `.` - is data taken directly from the Prisma Cloud API - this means you can
+filter on any attributes that Prisma reports. The container filter input is an entry from the `radar/containers` API
 endpoint; the vulnerability filter input is the matching `vulnerabilities` field from the `images` API endpoint; the
 compliance issues filter input is the matching `info/complianceIssues` field from the `containers` API endpoint. To see
 the full set of data on which the filters operate, run the tool with the `--results=file.json` option, and inspect the
