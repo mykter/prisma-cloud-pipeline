@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     make \
     git \
     && rm -rf /var/lib/apt/lists/*
-RUN pip3 install --upgrade pip poetry 
+RUN pip3 install --upgrade pip poetry httpie
 
 # we're already in a container, no need for venvs
 RUN poetry config virtualenvs.create false
