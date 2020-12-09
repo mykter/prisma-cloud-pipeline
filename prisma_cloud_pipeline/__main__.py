@@ -161,6 +161,8 @@ def main() -> None:
         rules: TriageRules = yaml.safe_load(args.rules)
     except yaml.scanner.ScannerError as err:
         sys.exit(f"Failed to load triage rules file; is it valid yaml? Error was: {err}")
+    if rules == None:  # handle an empty rules file
+        rules = {}
     if not rules_validator.is_valid(rules):
         print("The provided triage rules weren't in the valid format:")
         for error in rules_validator.iter_errors(rules):
