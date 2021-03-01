@@ -7,7 +7,8 @@ define
 [triage rules](https://docs.twistlock.com/docs/compute_edition/vulnerability_management/vuln_management_rules.html) to
 ignore findings. There are a number of [example integrations](https://github.com/twistlock/sample-code/blob/master/CI/)
 into CI pipelines, which all follow the same pattern: scan a specific docker image that is present in the pipeline,
-report any issues found, and optionally fail if a certain 'badness' threshold is met. These are useful, but limited.
+report any issues found, and optionally fail if a certain 'badness' threshold is met. These integrations are useful, but
+limited.
 
 The motivation for this project is to get _all_ findings closer to developers, not just findings for a specific
 container, and integrate the entire process with existing project CI pipelines. All findings (for specified collections)

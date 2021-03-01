@@ -45,9 +45,9 @@ Container = Mapping[str, Any]
 class RuleType(Enum):
     """ what a rule filters """
 
-    Container = 1
-    Vuln = 2
-    Compliance = 3
+    CONTAINER = 1
+    VULN = 2
+    COMPLIANCE = 3
 
 
 class MatchedFindings(TypedDict, total=False):  # pylint: disable=E0239,R0903 # false positive
@@ -260,7 +260,7 @@ class Results:
             assert container_count - new_container_count == len(matched)
             self._rule_stats.append(
                 RuleStat(
-                    RuleType.Container,
+                    RuleType.CONTAINER,
                     rule,
                     container_count - new_container_count,
                     vuln_count - new_vuln_count,
@@ -275,12 +275,12 @@ class Results:
             container_count, vuln_count, compliance_count = self.count()
 
             if "complianceFilter" in rule:
-                rule_type = RuleType.Compliance
+                rule_type = RuleType.COMPLIANCE
                 compliance_filter = rule["complianceFilter"]
                 # Treat the unspecified one as if it matches nothing
                 vuln_filter = "false"
             else:
-                rule_type = RuleType.Vuln
+                rule_type = RuleType.VULN
                 vuln_filter = rule["vulnFilter"]
                 compliance_filter = "false"
 
@@ -325,7 +325,7 @@ class Results:
             new_container_count, new_vuln_count, new_compliance_count = self.count()
 
             # sanity check that our query didn't go wrong
-            if rule_type == RuleType.Vuln:
+            if rule_type == RuleType.VULN:
                 assert compliance_count == new_compliance_count
             else:
                 assert vuln_count == new_vuln_count
@@ -411,7 +411,7 @@ class Results:
             print("\t" + "\n\t".join(rule_issues))
             print(
                 "Once an issue is closed, the corresponding triage rule "
-                "should be removed so regressions will be detected."
+                "should be removed or set to expire so regressions will be detected."
             )
 
     def print_rule_stats(self) -> None:
@@ -540,17 +540,17 @@ class Results:
             "containers": [
                 {"rule": stat.rule["matches"], "containers": stat.containers}
                 for stat in self._rule_stats
-                if stat.rule_type == RuleType.Container
+                if stat.rule_type == RuleType.CONTAINER
             ],
             "vulnerabilities": [
                 {"rule": stat.rule["matches"], "findings": stat.findings}
                 for stat in self._rule_stats
-                if stat.rule_type == RuleType.Vuln
+                if stat.rule_type == RuleType.VULN
             ],
             "complianceIssues": [
                 {"rule": stat.rule["matches"], "findings": stat.findings}
                 for stat in self._rule_stats
-                if stat.rule_type == RuleType.Compliance
+                if stat.rule_type == RuleType.COMPLIANCE
             ],
         }
 
