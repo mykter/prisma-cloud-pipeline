@@ -61,4 +61,4 @@ The following rules have expired and were ignored:
 
 Outstanding issues in triage rules: 
 	PROJ-321
-Once an issue is closed, the corresponding triage rule should be removed so regressions will be detected.
+Once an issue is closed, the corresponding triage rule should be removed or set to expire so regressions will be detected.
