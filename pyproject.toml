@@ -33,7 +33,7 @@ pyyaml = ">=5.3,<5.5"
 mypy = ">=0.790"
 pylint = ">=2.6.0"
 black = { version = "^21.4b2", allow-prereleases = true }
-dunamai = "^1.5.4"
+dunamai = "^1.5.5"
 
 [tool.poetry.scripts]
 prisma-cloud-pipeline = 'prisma_cloud_pipeline.__main__:main'
