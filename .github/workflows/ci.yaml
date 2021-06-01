@@ -93,7 +93,7 @@ jobs:
 
       - name: Get docker tags
         id: docker_meta
-        uses: crazy-max/ghaction-docker-meta@v2.4.0
+        uses: crazy-max/ghaction-docker-meta@v3.3.0
         with:
           images: safenetlabs/prisma-cloud-pipeline
 
