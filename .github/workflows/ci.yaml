@@ -93,7 +93,7 @@ jobs:
 
       - name: Get docker tags
         id: docker_meta
-        uses: docker/metadata-action@v3.3.0
+        uses: docker/metadata-action@v3.4.1
         with:
           images: safenetlabs/prisma-cloud-pipeline
 
