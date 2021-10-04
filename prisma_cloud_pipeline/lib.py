@@ -615,9 +615,8 @@ class Api:
                 vulns = images[image_id]["vulnerabilities"] or []
             else:
                 print(
-                    "Warning: no image data found for container {} with image ID {}".format(
-                        profile_id, image_id
-                    )
+                    f"Warning: no image data found for container {profile_id}"
+                    f" with image ID {image_id}"
                 )
             radar[i]["vulnerabilities"] = vulns
 
@@ -627,9 +626,8 @@ class Api:
                 issues = containers[profile_id]["info"]["complianceIssues"] or []
             else:
                 print(
-                    "Warning: no container data found for container {} with image ID {}".format(
-                        profile_id, image_id
-                    )
+                    f"Warning: no image data found for container {profile_id}"
+                    f" with image ID {image_id}"
                 )
             radar[i]["complianceIssues"] = issues
 
