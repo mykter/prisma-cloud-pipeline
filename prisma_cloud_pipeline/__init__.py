@@ -7,5 +7,7 @@ import json
 import jsonschema  # type: ignore
 
 # a validator for the triage rules.
-with open(os.path.join(os.path.split(__file__)[0], "rules-schema.json")) as schema:
+with open(
+    os.path.join(os.path.split(__file__)[0], "rules-schema.json"), encoding="utf8"
+) as schema:
     rules_validator = jsonschema.Draft7Validator(json.load(schema))
