@@ -331,7 +331,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "types-pyyaml"
-version = "5.4.10"
+version = "6.0.1"
 description = "Typing stubs for PyYAML"
 category = "main"
 optional = false
@@ -397,7 +397,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "269ca6877c108bc3baf7191a55465fbb4d73ba5e660fb71fc0357e3f8aebb7c4"
+content-hash = "cf2de7baefb32df5721d5dc09614dc56b3ae90f08a23e0b5e95bd288150e62fe"
 
 [metadata.files]
 astroid = [
@@ -677,8 +677,8 @@ tomli = [
     {file = "tomli-1.2.1.tar.gz", hash = "sha256:a5b75cb6f3968abb47af1b40c1819dc519ea82bcc065776a866e8d74c5ca9442"},
 ]
 types-pyyaml = [
-    {file = "types-PyYAML-5.4.10.tar.gz", hash = "sha256:1d9e431e9f1f78a65ea957c558535a3b15ad67ea4912bce48a6c1b613dcf81ad"},
-    {file = "types_PyYAML-5.4.10-py3-none-any.whl", hash = "sha256:f1d1357168988e45fa20c65aecb3911462246a84809015dd889ebf8b1db74124"},
+    {file = "types-PyYAML-6.0.1.tar.gz", hash = "sha256:2e27b0118ca4248a646101c5c318dc02e4ca2866d6bc42e84045dbb851555a76"},
+    {file = "types_PyYAML-6.0.1-py3-none-any.whl", hash = "sha256:d5b318269652e809b5c30a5fe666c50159ab80bfd41cd6bafe655bf20b29fcba"},
 ]
 types-requests = [
     {file = "types-requests-2.25.9.tar.gz", hash = "sha256:4ec8b71da73e5344adb9bee725a74ec8598e7286f9bcb17500d627f259fe4fb9"},

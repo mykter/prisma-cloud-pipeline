@@ -30,7 +30,7 @@ requests = ">=2.25,<2.27"
 pyyaml = ">=5.3,<6.1"
 types-requests = "^2.25.9"
 types-tabulate = "^0.8.2"
-types-PyYAML = "^5.4.10"
+types-PyYAML = ">=5.4.10,<7.0.0"
 
 [tool.poetry.dev-dependencies]
 mypy = ">=0.790"
